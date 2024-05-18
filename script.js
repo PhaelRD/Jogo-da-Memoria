@@ -1,4 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let playerName = prompt("Por favor, digite seu nome:");
+
+    // Verificar se o nome foi inserido e não está vazio
+    if (!playerName) {
+        playerName = "Jogador"; // Nome padrão caso nenhum nome seja inserido
+    }
+
+    const playerNameDisplay = document.getElementById('playerName');
+    const editNameButton = document.getElementById('editNameButton');
+    const leaderboardDisplay = document.getElementById('leaderboard');
+
+    function updatePlayerName(newName) {
+        playerName = newName || playerName; // Use o novo nome se fornecido, caso contrário, mantenha o nome atual
+        playerNameDisplay.textContent = playerName;
+    }
+
+    updatePlayerName(); // Exibir o nome do jogador inicial
+
+    editNameButton.addEventListener('click', () => {
+        const newName = prompt("Por favor, digite um novo nome:", playerName);
+        updatePlayerName(newName);
+    });
+
+    // Carregar os registros do armazenamento local
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+
+    function updateLeaderboard() {
+        // Ordenar os registros por tempo e, em seguida, por movimentos
+        leaderboard.sort((a, b) => {
+            if (a.time === b.time) {
+                return a.moves - b.moves;
+            }
+            return a.time - b.time;
+        });
+
+        // Limitar a exibição a apenas os 10 melhores registros
+        leaderboard = leaderboard.slice(0, 10);
+
+        // Exibir os registros no leaderboardDisplay
+        leaderboardDisplay.innerHTML = '<h2>Top 10 Jogadores</h2>';
+        leaderboard.forEach((record, index) => {
+            leaderboardDisplay.innerHTML += `<p>${index + 1}. ${record.name} - ${record.moves} movimentos em ${record.time} segundos</p>`;
+        });
+    }
+
+    function addRecordToLeaderboard(moves, time) {
+        leaderboard.push({ name: playerName, moves, time });
+        localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        updateLeaderboard();
+    }
+
     const gameBoard = document.getElementById('gameBoard');
     const movesCounter = document.getElementById('moves');
     const timerDisplay = document.getElementById('timer');
@@ -80,7 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (document.querySelectorAll('.card.matched').length === emojisArray.length) {
             clearInterval(timer);
-            alert(`Parabéns! Você venceu em ${moves} movimentos e ${seconds} segundos.`);
+            addRecordToLeaderboard(moves, seconds);
+            alert(`Parabéns, ${playerName}! Você venceu em ${moves} movimentos e ${seconds} segundos.`);
         }
     }
 
@@ -99,6 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     restartButton.addEventListener('click', startGame);
+
+    updateLeaderboard(); // Exibir o leaderboard ao iniciar o jogo
 
     startGame();
 });

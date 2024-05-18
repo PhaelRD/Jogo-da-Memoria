@@ -9,9 +9,12 @@
 <body>
     <h1>Jogo da Memória</h1>
     <div class="game-info">
+        <span id="playerName">Jogador</span> <!-- Elemento onde o nome do jogador será exibido -->
+        <button id="editNameButton">Editar Nome</button> <!-- Botão para editar o nome -->
         <span id="moves">Movimentos: 0</span>
         <span id="timer">Tempo: 0s</span>
     </div>
+    <div id="leaderboard"></div>
     <button id="restartButton">Reiniciar Jogo</button>
     <div class="game-board" id="gameBoard"></div>
     <script src="script.js"></script>
