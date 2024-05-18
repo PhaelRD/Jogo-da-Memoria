@@ -1,5 +1,7 @@
 Um jogo da memória simples onde os usuários precisam combinar pares de cartas. Desenvolvido com HTML, CSS e JavaScript.
 
+https://phaelrd.github.io/Jogo-da-Memoria/
+
 Funcionalidades
 Cartas viradas ao clicar.
 Verificação de pares.
